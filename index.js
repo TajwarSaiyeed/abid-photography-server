@@ -10,3 +10,7 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("server is running");
 });
+
+app.listen(port, () => {
+  console.log(`server running on port : ${port}`);
+});
