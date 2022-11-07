@@ -19,11 +19,23 @@ const run = async () => {
   try {
     const servicesCollection = client.db("photography").collection("services");
 
+    //services 3 service load
     app.get("/services", async (req, res) => {
+      const id = req.query.id;
       const query = {};
       const cursor = servicesCollection.find(query);
-      const result = await cursor.limit(3).toArray();
-      res.send(result);
+      if (id === "2") {
+        const result = await cursor.limit(2).toArray();
+        return res.send(result);
+      }
+      if (id === "3") {
+        const result = await cursor.limit(3).toArray();
+        return res.send(result);
+      }
+      if (id === "") {
+        const result = await cursor.toArray();
+        res.send(result);
+      }
     });
   } finally {
   }
