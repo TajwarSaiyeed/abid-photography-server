@@ -1,4 +1,4 @@
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
@@ -18,6 +18,8 @@ const client = new MongoClient(uri, {
 const run = async () => {
   try {
     const servicesCollection = client.db("photography").collection("services");
+    const messagesCollection = client.db("photography").collection("messages");
+    const reviewCollection = client.db("photography").collection("reviews");
 
     //services 3 service load
     app.get("/services", async (req, res) => {
@@ -36,6 +38,48 @@ const run = async () => {
         const result = await cursor.toArray();
         res.send(result);
       }
+    });
+
+    app.get("/service/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await servicesCollection.findOne(query);
+      res.send(result);
+    });
+
+    app.post("/messages", async (req, res) => {
+      const message = req.body;
+      const result = await messagesCollection.insertOne(message);
+      res.send(result);
+    });
+
+    app.get("/reviews", async (req, res) => {
+      const query = {};
+      const cursor = reviewCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    app.get("/review/:serviceId", async (req, res) => {
+      const id = req.params.serviceId;
+      const query = { serviceId: id };
+      const cursor = reviewCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    app.get("/myreview", async (req, res) => {
+      const email = req.query.email;
+      const query = { email: email };
+      const cursor = reviewCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    app.post("/reviews", async (req, res) => {
+      const review = req.body;
+      const result = await reviewCollection.insertOne(review);
+      res.send(result);
     });
   } finally {
   }
