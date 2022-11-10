@@ -40,7 +40,7 @@ const run = async () => {
     app.post("/jwt", (req, res) => {
       const user = req.body;
       const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: "20s",
+        expiresIn: "1d",
       });
       res.send({ token });
     });
@@ -64,7 +64,7 @@ const run = async () => {
       }
     });
 
-    app.post("/services", async (req, res) => {
+    app.post("/services", verifyJWT, async (req, res) => {
       const service = req.body;
       const result = await servicesCollection.insertOne(service);
       res.send(result);
