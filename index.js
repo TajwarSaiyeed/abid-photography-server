@@ -64,11 +64,15 @@ const run = async () => {
       }
     });
 
+    // service insert
+
     app.post("/services", verifyJWT, async (req, res) => {
       const service = req.body;
       const result = await servicesCollection.insertOne(service);
       res.send(result);
     });
+
+    // specific service
 
     app.get("/service/:id", async (req, res) => {
       const id = req.params.id;
@@ -77,11 +81,15 @@ const run = async () => {
       res.send(result);
     });
 
+    // messages
+
     app.post("/messages", verifyJWT, async (req, res) => {
       const message = req.body;
       const result = await messagesCollection.insertOne(message);
       res.send(result);
     });
+
+    // all reviews
 
     app.get("/reviews", async (req, res) => {
       const query = {};
@@ -90,6 +98,8 @@ const run = async () => {
       res.send(result);
     });
 
+    // reviews by service id
+
     app.get("/review/:serviceId", async (req, res) => {
       const id = req.params.serviceId;
       const query = { serviceId: id };
@@ -97,6 +107,8 @@ const run = async () => {
       const result = await cursor.toArray();
       res.send(result);
     });
+
+    // update modal show review
 
     app.get("/updatereview/:reviewId", verifyJWT, async (req, res) => {
       const id = req.params.reviewId;
@@ -118,6 +130,8 @@ const run = async () => {
       res.send(result);
     });
 
+    // decoded
+
     app.get("/myreview", verifyJWT, async (req, res) => {
       const email = req.query.email;
       const decoded = req.decoded.email;
@@ -130,12 +144,16 @@ const run = async () => {
       res.send(result);
     });
 
+    // delete review
+
     app.delete("/myreview/:id", verifyJWT, async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await reviewCollection.deleteOne(query);
       res.send(result);
     });
+
+    // post review
 
     app.post("/reviews", verifyJWT, async (req, res) => {
       const review = req.body;
